@@ -46,6 +46,8 @@ REJECT OUT_OF_REGION: 1 px at (71, 25) outside "helmet"
 no file written (exit 1)
 ```
 
+Both blocks are the recorded session in `assets/demo.cast` — replay it with `asciinema play assets/demo.cast`. `assets/demo.tape` drives the same path and re-renders it as a GIF with `vhs assets/demo.tape`.
+
 Line 2 is the point. Not "I tried to stay inside the region", but a separate SHA-256 over the pixel set outside it: a mask makes a promise, a hash is a proof. On a refusal no PNG, no sidecar and no receipt appear, so retrying cannot pollute the directory.
 
 ## Quickstart (under 10 minutes)

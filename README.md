@@ -46,6 +46,8 @@ REJECT OUT_OF_REGION: 1 px at (71, 25) outside "helmet"
 no file written (exit 1)
 ```
 
+上面两段是 `assets/demo.cast` 里录制的真实会话，可用 `asciinema play assets/demo.cast` 重放；`assets/demo.tape` 是同一路径的终端录制脚本，`vhs assets/demo.tape` 可重新渲染成 GIF。
+
 第 2 行是重点。不是"我尽量只改这块"，而是把区域之外的像素集合单独做一次 SHA-256：掩码只承诺，哈希才是证明。拒绝时连 PNG、sidecar 和回执都不会出现，重跑一次不会污染目录。
 
 ## 快速开始（10 分钟内）

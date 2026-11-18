@@ -122,5 +122,10 @@
     "Whole-atlas consistency only, not frame-by-frame sprite-sheet animation",
     "darwin and linux binaries only; no Windows build",
     "Some Godot fields were mapped without a field-by-field on-disk sample; the README table is the contract"
-  ]
+  ],
+  "demo_artifact": {
+    "cast": "assets/demo.cast",
+    "cast_recorded": "2026-11-19 with asciinema 3.x, contains the PASS and REJECT blocks",
+    "tape": "assets/demo.tape"
+  }
 }
