@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://hero.png" id="1_hero"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hero"]
+atlas = ExtResource("1_hero")
+region = Rect2(0, 0, 96, 96)
+
+[node name="Hero" type="Sprite2D"]
+texture = SubResource("AtlasTexture_hero")
+centered = true
+offset = Vector2(0, 0)
+scale = Vector2(1, 1)
+metadata/pixels_per_unit = 1.0
+
+[node name="helmet" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-16, -24, 16, -24, 24, -16, 24, 8, 16, 16, -16, 16, -24, 8, -24, -16)
+
+[node name="sword" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-6, 16, 6, 16, 6, 70, -6, 70)

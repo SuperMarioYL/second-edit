@@ -1,0 +1,16 @@
+[
+  "after_sha",
+  "asset_id",
+  "before_sha",
+  "changed_pct",
+  "changed_px",
+  "checks",
+  "id",
+  "mask_area_px",
+  "output",
+  "parent_receipt",
+  "region",
+  "schema_version",
+  "untouched_sha",
+  "verdict"
+]

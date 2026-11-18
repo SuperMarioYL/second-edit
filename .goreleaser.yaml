@@ -1,0 +1,35 @@
+version: 2
+
+project_name: second-edit
+
+before:
+  hooks:
+    - go vet ./...
+    - go test ./...
+
+builds:
+  - id: second-edit
+    main: ./cmd/second-edit
+    binary: second-edit
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+
+archives:
+  - id: default
+    formats: [tar.gz]
+
+checksum:
+  name_template: checksums.txt
+
+changelog:
+  disable: true

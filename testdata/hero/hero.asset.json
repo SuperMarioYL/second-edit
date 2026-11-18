@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "id": "2ffb0bbbbaa6",
+  "engine": "godot-4",
+  "scene": "hero.tscn",
+  "source": {
+    "file": "hero.png",
+    "sha256": "de89af8472f46fbb8ec5d98abefd923845f73fd4c2fbd9a8c71ef645f90b9325",
+    "width": 96,
+    "height": 96
+  },
+  "regions": [
+    {
+      "name": "helmet",
+      "shape": "polygon",
+      "rect": {
+        "x": 24,
+        "y": 24,
+        "w": 48,
+        "h": 40
+      },
+      "polygon": [
+        [
+          32,
+          24
+        ],
+        [
+          64,
+          24
+        ],
+        [
+          72,
+          32
+        ],
+        [
+          72,
+          56
+        ],
+        [
+          64,
+          64
+        ],
+        [
+          32,
+          64
+        ],
+        [
+          24,
+          56
+        ],
+        [
+          24,
+          32
+        ]
+      ]
+    },
+    {
+      "name": "sword",
+      "shape": "rect",
+      "rect": {
+        "x": 42,
+        "y": 64,
+        "w": 12,
+        "h": 24
+      },
+      "polygon": [
+        [
+          42,
+          64
+        ],
+        [
+          54,
+          64
+        ],
+        [
+          54,
+          88
+        ],
+        [
+          42,
+          88
+        ]
+      ]
+    }
+  ],
+  "facts": {
+    "pivot": [
+      48,
+      48
+    ],
+    "pixels_per_unit": 1,
+    "scale": [
+      1,
+      1
+    ],
+    "collision": [
+      {
+        "name": "helmet",
+        "points": [
+          [
+            32,
+            24
+          ],
+          [
+            64,
+            24
+          ],
+          [
+            72,
+            32
+          ],
+          [
+            72,
+            56
+          ],
+          [
+            64,
+            64
+          ],
+          [
+            32,
+            64
+          ],
+          [
+            24,
+            56
+          ],
+          [
+            24,
+            32
+          ]
+        ]
+      },
+      {
+        "name": "sword",
+        "points": [
+          [
+            42,
+            64
+          ],
+          [
+            54,
+            64
+          ],
+          [
+            54,
+            88
+          ],
+          [
+            42,
+            88
+          ]
+        ]
+      }
+    ],
+    "atlas": {
+      "sheet": "res://hero.png",
+      "region": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 96
+      }
+    }
+  },
+  "invariants": [
+    {
+      "kind": "max_changed_pct",
+      "value": 10
+    }
+  ]
+}

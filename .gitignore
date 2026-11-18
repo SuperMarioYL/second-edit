@@ -1,0 +1,22 @@
+# build output
+/bin/
+/dist/
+
+# local demo and run artifacts
+/demo-out/
+receipts/
+
+# editor and OS noise
+.DS_Store
+
+# assistant configuration
+.claude/
+CLAUDE.md
+
+# build scratch
+PUBLISH_BLOCKED.md
+BUILD_SETUP_NEXT_STEPS.md
+.spawn.*
+.builder_*
+.build_metadata*
+.stage_*

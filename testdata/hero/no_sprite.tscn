@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[node name="Root" type="Node2D"]
+
+[node name="helmet" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-16, -24, 16, -24, 24, -16, 24, 8, 16, 16, -16, 16, -24, 8, -24, -16)
