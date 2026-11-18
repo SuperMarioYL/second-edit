@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500" role="img" aria-labelledby="process-dark-title process-dark-desc" data-palette="5be1ff-8b7bff-9bf0ff-e0921e65014f">
+<title id="process-dark-title">second-edit core process: six stages, two outcomes</title>
+<desc id="process-dark-desc">Stages PNG plus scene, init, patch, composite, complement hash, import checks, branching to PASS writes files and REJECT writes nothing.</desc>
+<style>
+  text { font-family: ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  .p { animation: converge 6s ease-in-out infinite; transform-box: fill-box; }
+  @keyframes converge {
+    0% { transform: translate(-80px, 26px); opacity: 0; }
+    55% { opacity: .9; }
+    100% { transform: translate(0, 0); opacity: .55; }
+  }
+  .flow { stroke-dasharray: 5 11; animation: dash 2.6s linear infinite; }
+  @keyframes dash { to { stroke-dashoffset: -64; } }
+  .breathe { animation: breathe 4s ease-in-out infinite; }
+  @keyframes breathe { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    .p, .flow, .breathe { animation: none; opacity: 1; }
+  }
+</style>
+<defs>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M40 0H0V40" fill="none" stroke="#131B2C" stroke-width="1"/>
+  </pattern>
+  <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#5BE1FF" stop-opacity=".30"/>
+    <stop offset="100%" stop-color="#5BE1FF" stop-opacity="0"/>
+  </radialGradient>
+</defs>
+<rect width="1200" height="500" fill="#080B16"/>
+<rect width="1200" height="500" fill="url(#grid)" opacity=".55"/>
+<text x="64" y="64" fill="#5BE1FF" font-size="14" letter-spacing="3" class="mono">CORE PROCESS</text>
+<text x="64" y="112" fill="#E9EFFA" font-size="32" font-weight="700">Six stages, two outcomes</text>
+<text x="64" y="146" fill="#93A2BA" font-size="16">Every stage is inspectable before the next one runs.</text>
+
+<g>
+  <rect x="44" y="200" width="168" height="120" rx="10" fill="#0E1424" stroke="#22304A"/>
+  <circle cx="68" cy="226" r="13" fill="#111A2C" stroke="#5BE1FF" stroke-opacity=".6"/>
+  <text x="68" y="231" fill="#5BE1FF" font-size="11" class="mono" text-anchor="middle">01</text>
+  <text x="60" y="262" fill="#E9EFFA" font-size="15" font-weight="600">PNG + .tscn</text>
+  <text x="60" y="286" fill="#93A2BA" font-size="11.5">sprite and the scene</text>
+  <text x="60" y="304" fill="#93A2BA" font-size="11.5">that owns it</text>
+</g><g>
+  <rect x="232" y="200" width="168" height="120" rx="10" fill="#0E1424" stroke="#22304A"/>
+  <circle cx="256" cy="226" r="13" fill="#111A2C" stroke="#5BE1FF" stroke-opacity=".6"/>
+  <text x="256" y="231" fill="#5BE1FF" font-size="11" class="mono" text-anchor="middle">02</text>
+  <text x="248" y="262" fill="#E9EFFA" font-size="15" font-weight="600">init</text>
+  <text x="248" y="286" fill="#93A2BA" font-size="11.5">facts and named regions</text>
+  <text x="248" y="304" fill="#93A2BA" font-size="11.5">into a sidecar</text>
+</g><g>
+  <rect x="420" y="200" width="168" height="120" rx="10" fill="#0E1424" stroke="#22304A"/>
+  <circle cx="444" cy="226" r="13" fill="#111A2C" stroke="#5BE1FF" stroke-opacity=".6"/>
+  <text x="444" y="231" fill="#5BE1FF" font-size="11" class="mono" text-anchor="middle">03</text>
+  <text x="436" y="262" fill="#E9EFFA" font-size="15" font-weight="600">patch</text>
+  <text x="436" y="286" fill="#93A2BA" font-size="11.5">PNG at the region</text>
+  <text x="436" y="304" fill="#93A2BA" font-size="11.5">bounding box</text>
+</g><g>
+  <rect x="608" y="200" width="168" height="120" rx="10" fill="#0E1424" stroke="#22304A"/>
+  <circle cx="632" cy="226" r="13" fill="#111A2C" stroke="#5BE1FF" stroke-opacity=".6"/>
+  <text x="632" y="231" fill="#5BE1FF" font-size="11" class="mono" text-anchor="middle">04</text>
+  <text x="624" y="262" fill="#E9EFFA" font-size="15" font-weight="600">composite</text>
+  <text x="624" y="286" fill="#93A2BA" font-size="11.5">masked copy,</text>
+  <text x="624" y="304" fill="#93A2BA" font-size="11.5">nothing else moves</text>
+</g><g>
+  <rect x="796" y="200" width="168" height="120" rx="10" fill="#0E1424" stroke="#22304A"/>
+  <circle cx="820" cy="226" r="13" fill="#111A2C" stroke="#5BE1FF" stroke-opacity=".6"/>
+  <text x="820" y="231" fill="#5BE1FF" font-size="11" class="mono" text-anchor="middle">05</text>
+  <text x="812" y="262" fill="#E9EFFA" font-size="15" font-weight="600">hash</text>
+  <text x="812" y="286" fill="#93A2BA" font-size="11.5">complement of</text>
+  <text x="812" y="304" fill="#93A2BA" font-size="11.5">mask + feather</text>
+</g><g>
+  <rect x="984" y="200" width="168" height="120" rx="10" fill="#0E1424" stroke="#22304A"/>
+  <circle cx="1008" cy="226" r="13" fill="#111A2C" stroke="#5BE1FF" stroke-opacity=".6"/>
+  <text x="1008" y="231" fill="#5BE1FF" font-size="11" class="mono" text-anchor="middle">06</text>
+  <text x="1000" y="262" fill="#E9EFFA" font-size="15" font-weight="600">checks</text>
+  <text x="1000" y="286" fill="#93A2BA" font-size="11.5">pivot · scale ·</text>
+  <text x="1000" y="304" fill="#93A2BA" font-size="11.5">collision · atlas</text>
+</g>
+<path d="M214 260 H228" stroke="#5BE1FF" stroke-width="2" class="flow"/><path d="M224 256 l6 4 -6 4" fill="none" stroke="#5BE1FF" stroke-width="2"/><path d="M402 260 H416" stroke="#5BE1FF" stroke-width="2" class="flow"/><path d="M412 256 l6 4 -6 4" fill="none" stroke="#5BE1FF" stroke-width="2"/><path d="M590 260 H604" stroke="#5BE1FF" stroke-width="2" class="flow"/><path d="M600 256 l6 4 -6 4" fill="none" stroke="#5BE1FF" stroke-width="2"/><path d="M778 260 H792" stroke="#5BE1FF" stroke-width="2" class="flow"/><path d="M788 256 l6 4 -6 4" fill="none" stroke="#5BE1FF" stroke-width="2"/><path d="M966 260 H980" stroke="#5BE1FF" stroke-width="2" class="flow"/><path d="M976 256 l6 4 -6 4" fill="none" stroke="#5BE1FF" stroke-width="2"/>
+<rect x="44" y="368" width="540" height="104" rx="10" fill="#0E1424" stroke="#5BE1FF" stroke-opacity=".55"/>
+<text x="64" y="396" fill="#5BE1FF" font-size="13" class="mono">PASS → exit 0</text>
+<text x="64" y="422" fill="#E9EFFA" font-size="14">write PNG + sidecar + receipts/000N.json</text>
+<text x="64" y="446" fill="#93A2BA" font-size="12.5" class="mono">every changed pixel inside the region</text>
+<rect x="612" y="368" width="544" height="104" rx="10" fill="#0E1424" stroke="#FF7070" stroke-opacity=".6"/>
+<text x="632" y="396" fill="#FF7070" font-size="13" class="mono">REJECT → exit 1</text>
+<text x="632" y="422" fill="#E9EFFA" font-size="14">no PNG, no sidecar, no receipt</text>
+<text x="632" y="446" fill="#93A2BA" font-size="12.5" class="mono">OUT_OF_REGION · PIVOT_DRIFT · BROKEN_CHAIN …</text>
+
+</svg>

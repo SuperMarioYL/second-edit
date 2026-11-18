@@ -1,0 +1,38 @@
+{
+  "mode": "custom",
+  "id": "5be1ff-8b7bff-9bf0ff-e0921e65014f",
+  "identity": "https://github.com/supermarioyl/second-edit",
+  "primary": "#5be1ff",
+  "secondary": "#8b7bff",
+  "highlight": "#9bf0ff",
+  "dark": {
+    "bg": "#050c13",
+    "panel": "#0c1720",
+    "code": "#0a161f",
+    "ink": "#ebfcff",
+    "muted": "#96b8c9",
+    "line": "#183b47",
+    "primary": "#5be1ff",
+    "secondary": "#8b7bff",
+    "highlight": "#9bf0ff",
+    "accent": "#5be1ff",
+    "buttonStart": "#348092",
+    "buttonEnd": "#7467d6",
+    "buttonText": "#ffffff"
+  },
+  "light": {
+    "bg": "#f9feff",
+    "panel": "#f7feff",
+    "code": "#f4fdff",
+    "ink": "#142933",
+    "muted": "#56798c",
+    "line": "#cdf6ff",
+    "primary": "#337e8e",
+    "secondary": "#7265d2",
+    "highlight": "#507b83",
+    "accent": "#337e8e",
+    "buttonStart": "#348092",
+    "buttonEnd": "#7467d6",
+    "buttonText": "#ffffff"
+  }
+}

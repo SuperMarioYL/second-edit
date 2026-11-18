@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500" role="img" aria-labelledby="integrations-dark-title integrations-dark-desc" data-palette="5be1ff-8b7bff-9bf0ff-e0921e65014f">
+<title id="integrations-dark-title">second-edit capabilities: the asset contract in the middle</title>
+<desc id="integrations-dark-desc">Central asset contract connected to PNG sprites, Godot 4 scenes, atlas sheets, receipts, a coding agent and a CI check.</desc>
+<style>
+  text { font-family: ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  .p { animation: converge 6s ease-in-out infinite; transform-box: fill-box; }
+  @keyframes converge {
+    0% { transform: translate(-80px, 26px); opacity: 0; }
+    55% { opacity: .9; }
+    100% { transform: translate(0, 0); opacity: .55; }
+  }
+  .flow { stroke-dasharray: 5 11; animation: dash 2.6s linear infinite; }
+  @keyframes dash { to { stroke-dashoffset: -64; } }
+  .breathe { animation: breathe 4s ease-in-out infinite; }
+  @keyframes breathe { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    .p, .flow, .breathe { animation: none; opacity: 1; }
+  }
+</style>
+<defs>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#131B2C" stroke-width="1"/></pattern>
+  <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#5BE1FF" stop-opacity=".30"/>
+    <stop offset="100%" stop-color="#5BE1FF" stop-opacity="0"/>
+  </radialGradient>
+</defs>
+<rect width="1200" height="500" fill="#080B16"/>
+<rect width="1200" height="500" fill="url(#grid)" opacity=".55"/>
+<text x="64" y="64" fill="#5BE1FF" font-size="14" letter-spacing="3" class="mono">CAPABILITIES</text>
+<text x="64" y="112" fill="#E9EFFA" font-size="32" font-weight="700">What the contract touches</text>
+<text x="64" y="146" fill="#93A2BA" font-size="16">One engine in v0.1. Everything else is a caller.</text>
+<line x1="64" y1="164" x2="1140" y2="164" stroke="#22304A"/>
+<circle cx="250" cy="294" r="150" fill="url(#halo)"/><path d="M358 294 C 459 294, 459 199, 554 199" fill="none" stroke="#22304A" stroke-width="1.5" stroke-dasharray="4 8"/><g>
+  <rect x="554" y="169" width="212" height="62" rx="9" fill="#0E1424" stroke="#22304A"/>
+  <circle cx="574" cy="199" r="4" fill="#5BE1FF" class="breathe"/>
+  <text x="590" y="195" fill="#E9EFFA" font-size="14" font-weight="600">PNG sprite</text>
+  <text x="590" y="216" fill="#93A2BA" font-size="11.5" class="mono">RGBA · any size</text>
+</g><path d="M358 294 C 619 294, 619 199, 874 199" fill="none" stroke="#22304A" stroke-width="1.5" stroke-dasharray="4 8"/><g>
+  <rect x="874" y="169" width="212" height="62" rx="9" fill="#0E1424" stroke="#22304A"/>
+  <circle cx="894" cy="199" r="4" fill="#8B7BFF" class="breathe"/>
+  <text x="910" y="195" fill="#E9EFFA" font-size="14" font-weight="600">Godot 4 .tscn</text>
+  <text x="910" y="216" fill="#93A2BA" font-size="11.5" class="mono">Sprite2D · AtlasTexture</text>
+</g><path d="M358 294 C 459 294, 459 293, 554 293" fill="none" stroke="#22304A" stroke-width="1.5" stroke-dasharray="4 8"/><g>
+  <rect x="554" y="263" width="212" height="62" rx="9" fill="#0E1424" stroke="#22304A"/>
+  <circle cx="574" cy="293" r="4" fill="#8B7BFF" class="breathe"/>
+  <text x="590" y="289" fill="#E9EFFA" font-size="14" font-weight="600">atlas sheet</text>
+  <text x="590" y="310" fill="#93A2BA" font-size="11.5" class="mono">region bounds</text>
+</g><path d="M358 294 C 619 294, 619 293, 874 293" fill="none" stroke="#22304A" stroke-width="1.5" stroke-dasharray="4 8"/><g>
+  <rect x="874" y="263" width="212" height="62" rx="9" fill="#0E1424" stroke="#22304A"/>
+  <circle cx="894" cy="293" r="4" fill="#5BE1FF" class="breathe"/>
+  <text x="910" y="289" fill="#E9EFFA" font-size="14" font-weight="600">receipts/*.json</text>
+  <text x="910" y="310" fill="#93A2BA" font-size="11.5" class="mono">schema v1 · chained</text>
+</g><path d="M358 294 C 459 294, 459 387, 554 387" fill="none" stroke="#22304A" stroke-width="1.5" stroke-dasharray="4 8"/><g>
+  <rect x="554" y="357" width="212" height="62" rx="9" fill="#0E1424" stroke="#22304A"/>
+  <circle cx="574" cy="387" r="4" fill="#5BE1FF" class="breathe"/>
+  <text x="590" y="383" fill="#E9EFFA" font-size="14" font-weight="600">coding agent</text>
+  <text x="590" y="404" fill="#93A2BA" font-size="11.5" class="mono">patch in · JSON out</text>
+</g><path d="M358 294 C 619 294, 619 387, 874 387" fill="none" stroke="#22304A" stroke-width="1.5" stroke-dasharray="4 8"/><g>
+  <rect x="874" y="357" width="212" height="62" rx="9" fill="#0E1424" stroke="#22304A"/>
+  <circle cx="894" cy="387" r="4" fill="#8B7BFF" class="breathe"/>
+  <text x="910" y="383" fill="#E9EFFA" font-size="14" font-weight="600">CI check</text>
+  <text x="910" y="404" fill="#93A2BA" font-size="11.5" class="mono">exit 1 blocks a merge</text>
+</g><circle cx="250" cy="294" r="100" fill="#0E1424" stroke="#5BE1FF" stroke-width="2" stroke-opacity=".7"/><text x="250" y="282" fill="#E9EFFA" font-size="19" font-weight="700" text-anchor="middle">asset</text><text x="250" y="308" fill="#E9EFFA" font-size="19" font-weight="700" text-anchor="middle">contract</text><text x="250" y="336" fill="#5BE1FF" font-size="12" class="mono" text-anchor="middle">schema v1</text><text x="250" y="358" fill="#93A2BA" font-size="11.5" class="mono" text-anchor="middle">not the image</text>
+</svg>

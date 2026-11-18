@@ -1,0 +1,399 @@
+{
+  "schema": 3,
+  "name": "second-edit",
+  "github": "https://github.com/SuperMarioYL/second-edit",
+  "lang": {
+    "primary": "zh",
+    "toggle": true
+  },
+  "palette": {
+    "primary": "#5BE1FF",
+    "secondary": "#8B7BFF",
+    "highlight": "#9BF0FF"
+  },
+  "hero": {
+    "eyebrow": {
+      "en": "Region-locked sprite edits for coding agents · local CLI · Godot 4",
+      "zh": "给 coding agent 的素材定点修改 · 本地 CLI · Godot 4"
+    },
+    "headline": {
+      "en": "Change the helmet.\nProve nothing else moved.",
+      "zh": "只改头盔那一块。\n并证明别的像素都没动。"
+    },
+    "sub": {
+      "en": "An agent asked for a targeted edit gets one of two answers today: regenerate the whole sprite and roll the dice, or hand-check the result. second-edit takes the patch, composites only inside the named region, refuses any pixel outside it, and writes a receipt that carries the untouched-region hash plus the engine import checks.",
+      "zh": "agent 要求做一次定点修改时，现在只有两种结果：整张重画、听天由命，或者人工逐像素核对。second-edit 接过补丁，只在指定区域内合成，任何越界像素直接拒绝，并写出一份回执：未改动区域的哈希 + 引擎导入检查结果。"
+    },
+    "href": "#quickstart",
+    "command": "second-edit apply --asset hero.asset.json --region helmet --patch helmet.png --out hero.v2.png",
+    "cta": {
+      "en": "Run the quickstart",
+      "zh": "跑一遍快速开始"
+    },
+    "ctaGithub": {
+      "en": "View on GitHub",
+      "zh": "在 GitHub 查看"
+    }
+  },
+  "advantages": [
+    {
+      "title": {
+        "en": "The edit contract is a sidecar, not a promise",
+        "zh": "编辑契约是落盘的 sidecar，不是口头承诺"
+      },
+      "body": {
+        "en": "`init` reads the PNG and the Godot scene once and writes a re-runnable sidecar: sheet size, named regions with their masks, and the import facts the checks compare against. Running it twice on the same inputs produced a byte-identical contract in the recorded run.",
+        "zh": "`init` 读一次 PNG 和 Godot 场景，写出一份可重复运行的 sidecar：图集尺寸、带遮罩的命名区域，以及各项检查要比对的导入事实。录制运行里对同样输入跑两次，产出逐字节一致。"
+      },
+      "chips": [
+        "› deterministic contract",
+        "› 2 regions in the fixture"
+      ]
+    },
+    {
+      "title": {
+        "en": "Out-of-region pixels are rejected, not reported",
+        "zh": "越界像素是拒绝，不是事后报告"
+      },
+      "body": {
+        "en": "Before anything is written, every patch pixel that differs outside the rasterized mask is checked. The recorded sloppy patch moved a single pixel at (71, 25); the tool returned REJECT OUT_OF_REGION with exit 1 and wrote no output file.",
+        "zh": "在写入任何文件之前，先逐像素检查补丁在光栅化遮罩之外是否有改动。录制里的 bad 补丁只挪动了 (71, 25) 这一个像素，工具返回 REJECT OUT_OF_REGION、退出码 1，且不写任何输出文件。"
+      },
+      "chips": [
+        "› exit 1, no file",
+        "› 1 px at (71,25)"
+      ]
+    },
+    {
+      "title": {
+        "en": "The receipt is the proof an agent can hand back",
+        "zh": "回执是 agent 能交回来的证据"
+      },
+      "body": {
+        "en": "Each accepted edit appends a receipt: before/after hashes, mask area, changed pixel count and percentage, the untouched-region hash, the four import checks, and a parent link to the previous receipt. A forked lineage is refused as BROKEN_CHAIN instead of silently continuing.",
+        "zh": "每次接受的修改追加一条回执：改前/改后哈希、遮罩面积、改动像素数与占比、未改动区域哈希、四项导入检查，以及指向上一条回执的父链。分叉的血缘会被判 BROKEN_CHAIN 拒绝，而不是悄悄继续。"
+      },
+      "chips": [
+        "› chained 0001 → 0002",
+        "› untouched sha256"
+      ]
+    },
+    {
+      "title": {
+        "en": "Import checks named after the failure, not a score",
+        "zh": "导入检查按失败名字说话，不给模糊评分"
+      },
+      "body": {
+        "en": "pivot, scale, collision and atlas each report ok or a named violation: PIVOT_DRIFT, SCALE_MISMATCH, COLLISION_OUT_OF_BOUNDS, ATLAS_REGION_SHIFT. The shipped fixtures move one field at a time so each code is reproducible.",
+        "zh": "pivot、scale、collision、atlas 四项各自报 ok 或具名违规：PIVOT_DRIFT、SCALE_MISMATCH、COLLISION_OUT_OF_BOUNDS、ATLAS_REGION_SHIFT。仓库自带的 fixture 每次只改一个字段，每个错误码都能复现。"
+      },
+      "chips": [
+        "› 4 named codes",
+        "› one field per fixture"
+      ]
+    }
+  ],
+  "demo": {
+    "title": {
+      "en": "Verified run record",
+      "zh": "已验证的运行记录"
+    },
+    "note": {
+      "en": "Commands and output below are copied from docs/demo-results.json, recorded 2026-11-19 with go1.24.1 on darwin/arm64. The input is the synthetic 96×96 fixture shipped in testdata/hero: every count describes that fixture only, not a user project.",
+      "zh": "下面的命令与输出取自 docs/demo-results.json，录制于 2026-11-19，go1.24.1 / darwin arm64。输入是仓库自带的 96×96 合成 fixture（testdata/hero）：所有计数只描述这个 fixture，不代表任何用户项目。"
+    },
+    "source": "https://github.com/SuperMarioYL/second-edit/blob/main/docs/demo-results.json",
+    "steps": [
+      {
+        "label": {
+          "en": "Build and print the version",
+          "zh": "构建并打印版本"
+        },
+        "body": {
+          "en": "Stdlib only at runtime; the binary reports v0.1.0.",
+          "zh": "运行时只用标准库；二进制报 v0.1.0。"
+        },
+        "command": "go build -o bin/second-edit ./cmd/second-edit && bin/second-edit version",
+        "output": "second-edit v0.1.0",
+        "image": "/assets/process-light.svg",
+        "imageDark": "/assets/process-dark.svg"
+      },
+      {
+        "label": {
+          "en": "Generate the shipped fixture",
+          "zh": "生成自带 fixture"
+        },
+        "body": {
+          "en": "A 96×96 sheet with a helmet polygon (1792 px) and a sword rect, plus a good patch and one off-by-a-pixel patch.",
+          "zh": "一张 96×96 图集，含 helmet 多边形（1792 px）与 sword 矩形，另附一个好补丁和一个差一像素的补丁。"
+        },
+        "command": "go run ./testdata/hero/make_fixture.go -out /tmp/second-edit-demo",
+        "output": "wrote /tmp/second-edit-demo\nhero.png 96x96 · helmet region 1792 px · good patch changes 476 px (5.2% of the sheet)\nsloppy.png differs from hero.png at exactly 1 pixel outside the helmet polygon",
+        "image": "/assets/integrations-light.svg",
+        "imageDark": "/assets/integrations-dark.svg"
+      },
+      {
+        "label": {
+          "en": "Write the contract",
+          "zh": "写出契约"
+        },
+        "body": {
+          "en": "One read of the PNG and the scene yields a re-runnable sidecar with both regions.",
+          "zh": "读一次 PNG 和场景，得到带两个区域的可重复运行 sidecar。"
+        },
+        "command": "bin/second-edit init /tmp/second-edit-demo/hero.png --scene /tmp/second-edit-demo/hero.tscn -o /tmp/second-edit-demo/hero.asset.json",
+        "output": "wrote /tmp/second-edit-demo/hero.asset.json · engine godot-4 · 2 regions · source hero.png (96x96)",
+        "image": "/assets/architecture-light.svg",
+        "imageDark": "/assets/architecture-dark.svg"
+      },
+      {
+        "label": {
+          "en": "Apply the good patch",
+          "zh": "应用好补丁"
+        },
+        "body": {
+          "en": "476 pixels change, all inside the helmet mask; the untouched hash and all four import checks come back ok.",
+          "zh": "改动 476 像素，全部落在 helmet 遮罩内；未改动哈希与四项导入检查全部 ok。"
+        },
+        "command": "bin/second-edit apply --asset .../hero.asset.json --region helmet --patch .../helmet.png --out .../hero.v2.png",
+        "output": "changed 476 px (5.2%) · all inside region \"helmet\"\nuntouched region sha256 da02276a36a6… unchanged\npivot ok · scale ok · collision ok · atlas unchanged\nwrote hero.v2.png + receipts/0001.json (exit 0)",
+        "image": "/assets/hero-light.svg",
+        "imageDark": "/assets/hero-dark.svg"
+      },
+      {
+        "label": {
+          "en": "Apply the off-by-a-pixel patch",
+          "zh": "应用差一像素的补丁"
+        },
+        "body": {
+          "en": "The rejection is the feature: exit 1, no output written.",
+          "zh": "拒绝本身就是功能：退出码 1，不写输出。"
+        },
+        "command": "bin/second-edit apply --asset .../hero.v2.asset.json --region helmet --patch .../sloppy.png --out .../hero.v3.png",
+        "output": "REJECT OUT_OF_REGION: 1 px at (71, 25) outside \"helmet\"\nno file written (exit 1)",
+        "image": "/assets/integrations-light.svg",
+        "imageDark": "/assets/integrations-dark.svg"
+      },
+      {
+        "label": {
+          "en": "Verify the asset and its chain",
+          "zh": "校验素材与回执链"
+        },
+        "body": {
+          "en": "check re-reads the scene, re-runs the import comparisons, and walks the receipt chain.",
+          "zh": "check 重读场景、重跑导入比对，并走一遍回执链。"
+        },
+        "command": "bin/second-edit check --asset /tmp/second-edit-demo/hero.v2.asset.json",
+        "output": "check PASS · source ok · pivot ok · scale ok · collision ok · atlas unchanged\nreceipt chain ok (1 receipt)",
+        "image": "/assets/process-light.svg",
+        "imageDark": "/assets/process-dark.svg"
+      }
+    ]
+  },
+  "quickstart": {
+    "title": {
+      "en": "Quickstart",
+      "zh": "快速开始"
+    },
+    "body": {
+      "en": "Go 1.24 or newer, no runtime dependencies. Clone, build, then run the shipped fixture — the whole loop takes a minute.",
+      "zh": "需要 Go 1.24 或更新版本，运行时无依赖。克隆、构建，然后跑自带 fixture——整个闭环一分钟。"
+    },
+    "steps": [
+      {
+        "title": {
+          "en": "Clone and build",
+          "zh": "克隆并构建"
+        },
+        "code": "git clone https://github.com/SuperMarioYL/second-edit.git\ncd second-edit\ngo build -o bin/second-edit ./cmd/second-edit"
+      },
+      {
+        "title": {
+          "en": "Generate the demo fixture",
+          "zh": "生成示例 fixture"
+        },
+        "code": "mkdir -p /tmp/second-edit-demo\ngo run ./testdata/hero/make_fixture.go -out /tmp/second-edit-demo"
+      },
+      {
+        "title": {
+          "en": "Write the contract",
+          "zh": "写出契约"
+        },
+        "code": "bin/second-edit init /tmp/second-edit-demo/hero.png \\\n  --scene /tmp/second-edit-demo/hero.tscn \\\n  -o /tmp/second-edit-demo/hero.asset.json"
+      },
+      {
+        "title": {
+          "en": "Apply a region-locked edit",
+          "zh": "应用一次定点修改"
+        },
+        "code": "bin/second-edit apply --asset /tmp/second-edit-demo/hero.asset.json \\\n  --region helmet --patch /tmp/second-edit-demo/helmet.png \\\n  --out /tmp/second-edit-demo/hero.v2.png"
+      },
+      {
+        "title": {
+          "en": "Verify",
+          "zh": "校验"
+        },
+        "code": "bin/second-edit check --asset /tmp/second-edit-demo/hero.v2.asset.json"
+      }
+    ]
+  },
+  "limitations": [
+    {
+      "en": "Godot 4 and 2D PNG only; no 3D, GLB, Unity, Unreal or GameMaker.",
+      "zh": "只支持 Godot 4 与 2D PNG；不含 3D、GLB、Unity、Unreal、GameMaker。"
+    },
+    {
+      "en": "No patch generation: no model calls, no API keys, no network. The patch comes in, the receipt goes out.",
+      "zh": "不生成补丁：不调用模型、不需要 API Key、不联网。补丁进来，回执出去。"
+    },
+    {
+      "en": "Collision polygons are interpreted in texture-pixel space relative to the sprite origin — a bounds check, not a general transform.",
+      "zh": "碰撞多边形按相对精灵原点的纹理像素空间解释——这是边界检查，不是通用变换。"
+    },
+    {
+      "en": "Atlas consistency is whole-atlas only, not frame-by-frame sprite-sheet animation.",
+      "zh": "图集一致性只在整张图集层面检查，不处理逐帧序列帧动画。"
+    },
+    {
+      "en": "One receipt lineage per receipts directory; forking the chain is refused as BROKEN_CHAIN.",
+      "zh": "每个 receipts 目录只有一条回执血缘；分叉直接判 BROKEN_CHAIN 拒绝。"
+    },
+    {
+      "en": "pixels_per_unit is read from the project's own metadata key, which Godot's importer does not read; if your project does not set it, that comparison is skipped.",
+      "zh": "pixels_per_unit 读自项目自己的 metadata 键，Godot 导入器并不读它；项目未设置时该项比对会跳过。"
+    },
+    {
+      "en": "Some Godot fields were mapped without a field-by-field on-disk sample; the README settings table is the contract.",
+      "zh": "部分 Godot 字段的映射缺少逐字段的实机样本；以 README 里的字段表为契约。"
+    },
+    {
+      "en": "darwin and linux binaries only; no Windows build.",
+      "zh": "只提供 darwin 与 linux 二进制；没有 Windows 构建。"
+    }
+  ],
+  "scene": {
+    "kind": "neon-graph",
+    "fallback": "/assets/scene-dark.svg",
+    "fallbackLight": "/assets/scene-light.svg",
+    "caption": {
+      "en": "Illustrative scene: cyan particles converge on a sprite grid while a receipt card shows the untouched-region hash holding steady. Exact counts belong to the recorded demo below.",
+      "zh": "示意场景：青色粒子汇聚到精灵网格上，旁边的回执卡显示未改动区域哈希保持不变。确切计数以下方录制演示为准。"
+    }
+  },
+  "story": {
+    "intro": {
+      "title": {
+        "en": "Why a second edit is the hard one",
+        "zh": "为什么“第二次修改”才是难点"
+      },
+      "body": {
+        "en": "The first iteration of a generated asset is a gamble everyone accepts: ask for a sprite, keep what looks right. The second edit is where the loop stalls. The agent cannot touch just the helmet, the engine import metadata is invisible from the outside, and nobody can prove the rest of the sheet stayed identical.",
+        "zh": "生成素材的第一版，大家都认了：描述一下，挑一张能用的。真正卡住的是第二次修改。agent 没办法只改头盔，引擎导入元数据从外面看不见，也没人能证明图集其余部分一个像素都没变。"
+      }
+    },
+    "sections": [
+      {
+        "title": {
+          "en": "A contract the agent can re-read",
+          "zh": "一份 agent 能反复读的契约"
+        },
+        "body": {
+          "en": "init turns the PNG plus the Godot scene into a sidecar: sheet size, named regions with rasterized masks, and the import facts. It is data on disk, so an agent can diff it, re-run it, and hand it to a reviewer.",
+          "zh": "init 把 PNG 与 Godot 场景变成 sidecar：图集尺寸、带光栅化遮罩的命名区域，以及导入事实。它是磁盘上的数据，agent 可以 diff、可以重跑、也能交给评审。"
+        },
+        "image": {
+          "light": "/assets/architecture-light.svg",
+          "dark": "/assets/architecture-dark.svg",
+          "alt": {
+            "en": "Contract pipeline: PNG plus scene to sidecar to masked patch to receipt",
+            "zh": "契约流水线：PNG 与场景 → sidecar → 遮罩补丁 → 回执"
+          }
+        }
+      },
+      {
+        "title": {
+          "en": "Refusal happens before writing",
+          "zh": "拒绝发生在写入之前"
+        },
+        "body": {
+          "en": "Every patch pixel is compared outside the mask first. If one differs, the run ends with REJECT OUT_OF_REGION and the exit code an agent is expected to branch on — no partial file, no silent overwrite of a good asset.",
+          "zh": "先逐个比较遮罩之外的补丁像素。只要有一个不同，本次运行就以 REJECT OUT_OF_REGION 结束，并给出 agent 该分支处理的退出码——没有半成品文件，也不会悄悄覆盖掉好素材。"
+        },
+        "image": {
+          "light": "/assets/process-light.svg",
+          "dark": "/assets/process-dark.svg",
+          "alt": {
+            "en": "Process: init, mask check, composite, import checks, receipt",
+            "zh": "流程：init、遮罩检查、合成、导入检查、回执"
+          }
+        }
+      },
+      {
+        "title": {
+          "en": "Import constraints as named failures",
+          "zh": "导入约束变成具名失败"
+        },
+        "body": {
+          "en": "pivot, scale, collision and atlas are compared against the recorded facts and reported by name. Four fixtures each move one field so the corresponding code is reproducible instead of anecdotal.",
+          "zh": "pivot、scale、collision、atlas 都对照记录下的事实比较，并按名字报告。四个 fixture 各只改一个字段，所以每个错误码都可复现，而不是故事。"
+        },
+        "image": {
+          "light": "/assets/integrations-light.svg",
+          "dark": "/assets/integrations-dark.svg",
+          "alt": {
+            "en": "Godot import facts: pivot, scale, collision, atlas",
+            "zh": "Godot 导入事实：pivot、scale、collision、atlas"
+          }
+        }
+      }
+    ],
+    "details": [
+      {
+        "title": {
+          "en": "What an agent actually receives",
+          "zh": "agent 实际拿到什么"
+        },
+        "body": {
+          "en": "A PASS receipt is a small JSON document: before/after hashes, mask area, changed pixels and percentage, the untouched-region hash, four named checks, and a parent link to the previous receipt. With --json the same document goes to stdout untouched, so the next step can pipe it straight into a validator.",
+          "zh": "PASS 回执是一份小 JSON：改前/改后哈希、遮罩面积、改动像素数与占比、未改动区域哈希、四项具名检查，以及指向上一条回执的父链。加 --json 时同一份文档干净地写到 stdout，下一步可以直接管道给校验器。"
+        },
+        "code": "second-edit check --asset hero.v2.asset.json --json | jq .verdict"
+      }
+    ]
+  },
+  "cta": {
+    "headline": {
+      "en": "Prove the edit.\nNot just the result.",
+      "zh": "证明这次修改。\n不只是看结果。"
+    },
+    "sub": {
+      "en": "Local, MIT, stdlib-only Go. One command turns an agent's patch into a receipt someone else can check.",
+      "zh": "本地运行、MIT、纯标准库 Go。一条命令把 agent 的补丁变成别人可以复核的回执。"
+    },
+    "button": {
+      "en": "Get started on GitHub",
+      "zh": "在 GitHub 上开始"
+    }
+  },
+  "footer": {
+    "tag": {
+      "en": "Local · no model calls · no network · MIT",
+      "zh": "本地 · 不调模型 · 不联网 · MIT"
+    }
+  },
+  "seo": {
+    "title": {
+      "en": "second-edit · Region-locked sprite edits with Godot import checks",
+      "zh": "second-edit · 定点修改精灵图，并校验 Godot 导入约束"
+    },
+    "description": {
+      "en": "A CLI that turns an agent's sprite patch into a region-locked edit plus a receipt: untouched-region hash, pivot/scale/collision/atlas checks, and a chained audit trail. Godot 4, 2D PNG, stdlib-only Go.",
+      "zh": "把 agent 的精灵补丁变成定点修改 + 回执的 CLI：未改动区域哈希、pivot/scale/collision/atlas 校验、可链式追溯的审计轨迹。Godot 4、2D PNG、纯 Go 标准库。"
+    }
+  },
+  "metadata": {
+    "visual_direction": "Dark-first neon particle grid with a cyan-to-violet identity, monospace receipt evidence, and a sprite-sheet motif; the light theme keeps the same semantic tokens at readable contrast. Scene is illustrative; all counts come from the recorded demo.",
+    "content_version": 1,
+    "source_version": "v0.1.0"
+  }
+}
