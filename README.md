@@ -20,35 +20,42 @@
   <img alt="an edit verb for generated game art" src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=18&pause=1200&color=0B7FA8&center=true&vCenter=true&width=720&lines=An+edit+verb+for+generated+game+art;Change+one+named+region.+Prove+every+other+pixel.">
 </p>
 
-**给 coding agent 用的素材编辑契约。** 它只改你指定的区域，并用一份可校验的回执证明：区域之外的像素逐字节没变，Godot 读到的 pivot、scale、碰撞多边形和图集区域也没有被破坏。改不成就什么都不写。
+**给 coding agent 用的素材编辑契约。** 它只改你指定的区域，并用一份可校验的回执证明：区域之外的像素逐字节没变，场景里声明的 pivot、scale、碰撞边界和图集区域也没有被破坏。改不成就什么都不写。
 
 第一次生成的素材通常没人抱怨。抱怨的是第二次——"头盔改红，剑短一点"。现在唯一可用的操作是整张重生成再肉眼比对，于是 agent 的第二次编辑退化成再摇一次骰子。second-edit 把这一步变成事务：补丁进来，通过就写文件，不通过就拒绝。
 
 ## 30 秒看结果
 
-一次通过的编辑，真实输出：
+两次通过的编辑（第二条接在第一条后面）和一次拒绝，真实输出：
 
 ```console
-$ second-edit apply --asset hero.asset.json --region helmet \
-    --patch helmet.png --out hero.v2.png
+$ second-edit init hero.png --scene hero.tscn -o hero.asset.json
+wrote hero.asset.json · engine godot-4 · 2 regions · source hero.png (96x96)
+
+$ second-edit apply --asset hero.asset.json --region helmet --patch helmet.png --out hero.v2.png
 changed 476 px (5.2%) · all inside region "helmet"
 untouched region sha256 da02276a36a6… unchanged
 pivot ok · scale ok · collision ok · atlas unchanged
 wrote hero.v2.png + receipts/0001.json (exit 0)
-```
 
-同一份契约，换成一个越过区域边界的补丁：
+$ second-edit apply --asset hero.v2.asset.json --region sword --patch sword.png --out hero.v3.png
+changed 288 px (3.1%) · all inside region "sword"
+untouched region sha256 29a588568bf9… unchanged
+pivot ok · scale ok · collision ok · atlas unchanged
+wrote hero.v3.png + receipts/0002.json (exit 0)
 
-```console
-$ second-edit apply --asset hero.v2.asset.json --region helmet \
-    --patch sloppy.png --out hero.v3.png
+$ second-edit apply --asset hero.v3.asset.json --region helmet --patch sloppy.png --out hero.v4.png
 REJECT OUT_OF_REGION: 1 px at (71, 25) outside "helmet"
 no file written (exit 1)
+
+$ second-edit check --asset hero.v3.asset.json
+check PASS · source ok · pivot ok · scale ok · collision ok · atlas unchanged
+receipt chain ok (2 receipts)
 ```
 
-上面两段是 `assets/demo.cast` 里录制的真实会话，可用 `asciinema play assets/demo.cast` 重放；`assets/demo.tape` 是同一路径的终端录制脚本，`vhs assets/demo.tape` 可重新渲染成 GIF。
+上面是 `assets/demo.cast` 里录制的真实会话，可用 `asciinema play assets/demo.cast` 重放；`assets/demo.tape` 是同一路径的终端录制脚本，`vhs assets/demo.tape` 可重新渲染成 GIF。
 
-第 2 行是重点。不是"我尽量只改这块"，而是把区域之外的像素集合单独做一次 SHA-256：掩码只承诺，哈希才是证明。拒绝时连 PNG、sidecar 和回执都不会出现，重跑一次不会污染目录。
+`untouched region sha256 … unchanged` 这一行是重点。不是"我尽量只改这块"，而是把区域之外的像素集合单独做一次 SHA-256：掩码只承诺，哈希才是证明。第二次编辑写出的是 `hero.v3.png` + `receipts/0002.json`，`parent_receipt` 是 `0001`，`before_sha` 正是第一次的 `after_sha`。拒绝时连 PNG、sidecar 和回执都不会出现，重跑一次不会污染目录。
 
 ## 快速开始（10 分钟内）
 
@@ -59,7 +66,7 @@ git clone https://github.com/SuperMarioYL/second-edit.git
 cd second-edit
 go build -o bin/second-edit ./cmd/second-edit
 
-# 生成示例素材：一张 96×96 图集、对应场景、一个好补丁、一个越界补丁
+# 生成示例素材：一张 96×96 图集、对应场景、两个好补丁（helmet、sword）、一个越界补丁
 mkdir -p /tmp/second-edit-demo
 go run ./testdata/hero/make_fixture.go -out /tmp/second-edit-demo
 
@@ -68,18 +75,23 @@ bin/second-edit init /tmp/second-edit-demo/hero.png \
   --scene /tmp/second-edit-demo/hero.tscn \
   -o /tmp/second-edit-demo/hero.asset.json
 
-# 2) 在 helmet 区域应用补丁
+# 2) 第一次编辑：helmet 区域
 bin/second-edit apply --asset /tmp/second-edit-demo/hero.asset.json \
   --region helmet --patch /tmp/second-edit-demo/helmet.png \
   --out /tmp/second-edit-demo/hero.v2.png
 
-# 3) 同一个区域，越过边界的补丁
+# 3) 第二次编辑：sword 区域，接在上一条回执之后（0002 / parent_receipt 0001）
 bin/second-edit apply --asset /tmp/second-edit-demo/hero.v2.asset.json \
-  --region helmet --patch /tmp/second-edit-demo/sloppy.png \
+  --region sword --patch /tmp/second-edit-demo/sword.png \
   --out /tmp/second-edit-demo/hero.v3.png
 
-# 4) 不编辑，只校验（CI 里跑的就是这一步）
-bin/second-edit check --asset /tmp/second-edit-demo/hero.v2.asset.json
+# 4) 回到 helmet，用越过边界的补丁（拒绝，不写任何文件）
+bin/second-edit apply --asset /tmp/second-edit-demo/hero.v3.asset.json \
+  --region helmet --patch /tmp/second-edit-demo/sloppy.png \
+  --out /tmp/second-edit-demo/hero.v4.png
+
+# 5) 不编辑，只校验当前源文件、导入事实与回执链（CI 里跑的就是这一步）
+bin/second-edit check --asset /tmp/second-edit-demo/hero.v3.asset.json
 ```
 
 `init` 是幂等的：同样的 PNG 与场景，两次运行产出逐字节相同的 sidecar（测试里锁了这一点）。场景无法映射时退出 2 并给出 `NO_ENGINE_FACTS`，不写任何文件。
@@ -90,20 +102,22 @@ bin/second-edit check --asset /tmp/second-edit-demo/hero.v2.asset.json
 | --- | --- | --- |
 | `second-edit init <sprite.png> --scene <scene.tscn> [-o contract.json]` | 读精灵与场景，写出资产契约 | 0 写出 / 2 无法映射 |
 | `second-edit apply --asset <contract.json> --region <name> --patch <patch.png> --out <file.png>` | 合成一个区域的补丁，全部检查通过才写 | 0 PASS / 1 REJECT / 2 用法或契约错误 |
-| `second-edit check --asset <contract.json> [--scene <scene.tscn>]` | 不编辑，只校验同上事实与回执链 | 0 PASS / 1 REJECT |
+| `second-edit check --asset <contract.json> [--scene <scene.tscn>]` | 不编辑，只校验源文件、四个导入事实与回执链 | 0 PASS / 1 REJECT |
 | `second-edit version` | 打印版本 | 0 |
 
 常用参数：
 
-- `--json`：标准输出只放 schema v1 的 JSON，人读的四行改走标准错误。适合 agent 直接 `| jq`。
+- `--json`：标准输出只放 schema v1 的 JSON（`apply` 与 `check` 都是），人读的行改走标准错误。适合 agent 直接 `| jq`。
 - `--feather N`：把区域外扩 N 像素，这些像素从"未改动"哈希里排除，用于接受自然羽化边缘。默认 0。
 - `--scene`（仅 `check`）：覆盖契约里记录的场景，用另一个 `.tscn` 校验同一份事实。
 
 被拒绝时 `--json` 输出 `{"schema_version":1,"verdict":"REJECT","code":"OUT_OF_REGION",...}`，退出码同为 1。
 
+`check` 校验的范围是：源 PNG 的 SHA-256 与尺寸、当前场景的四个导入事实、回执链的哈希衔接（链头必须等于当前源文件哈希）。它**不**重新计算输出文件里区域之外的像素哈希；那条证据是 `apply` 写入回执的 `untouched_sha`，需要时由审计方拿它与第一次的源图离线比对。
+
 ## 资产契约与回执
 
-契约是 sidecar，不是图片本身。`init` 从场景里读取引擎真正会读的字段：
+契约是 sidecar，不是图片本身。`init` 读取精灵引用和场景节点上声明的字段（不是 Godot 导入器读取的那套字段）：
 
 ```json
 {
@@ -111,20 +125,29 @@ bin/second-edit check --asset /tmp/second-edit-demo/hero.v2.asset.json
   "id": "2ffb0bbbbaa6",
   "engine": "godot-4",
   "scene": "hero.tscn",
-  "source": { "file": "hero.png", "sha256": "de89af84…", "width": 96, "height": 96 },
+  "source": { "file": "hero.png", "sha256": "de89af8472f46fbb8ec5d98abefd923845f73fd4c2fbd9a8c71ef645f90b9325", "width": 96, "height": 96 },
   "regions": [
     {
       "name": "helmet",
       "shape": "polygon",
       "rect": { "x": 24, "y": 24, "w": 48, "h": 40 },
       "polygon": [[32,24],[64,24],[72,32],[72,56],[64,64],[32,64],[24,56],[24,32]]
+    },
+    {
+      "name": "sword",
+      "shape": "rect",
+      "rect": { "x": 42, "y": 64, "w": 12, "h": 24 },
+      "polygon": [[42,64],[54,64],[54,88],[42,88]]
     }
   ],
   "facts": {
     "pivot": [48, 48],
     "pixels_per_unit": 1,
     "scale": [1, 1],
-    "collision": [{ "name": "helmet", "points": [[32,24],[64,24]] }],
+    "collision": [
+      { "name": "helmet", "points": [[32,24],[64,24],[72,32],[72,56],[64,64],[32,64],[24,56],[24,32]] },
+      { "name": "sword", "points": [[42,64],[54,64],[54,88],[42,88]] }
+    ],
     "atlas": { "sheet": "res://hero.png", "region": { "x": 0, "y": 0, "w": 96, "h": 96 } }
   },
   "invariants": [{ "kind": "max_changed_pct", "value": 10 }]
@@ -133,7 +156,7 @@ bin/second-edit check --asset /tmp/second-edit-demo/hero.v2.asset.json
 
 **区域就是场景里已有的 `CollisionPolygon2D`。** 名字来自节点名，形状来自多边形；有碰撞体的地方才有可编辑区域，避免另外维护一套坐标。`init` 拒绝没有碰撞体的场景，因为没有可命名的编辑面。
 
-回执是链式的：
+回执是链式的。下面是 demo 里第二次（sword）编辑真实写出的 `receipts/0002.json`，它的 `parent_receipt` 指向上一条：
 
 ```json
 {
@@ -141,13 +164,13 @@ bin/second-edit check --asset /tmp/second-edit-demo/hero.v2.asset.json
   "id": "0002",
   "parent_receipt": "0001",
   "asset_id": "2ffb0bbbbaa6",
-  "region": "helmet",
-  "before_sha": "da02276a…",
-  "after_sha": "248bf123…",
-  "mask_area_px": 1792,
-  "changed_px": 476,
-  "changed_pct": 5.2,
-  "untouched_sha": "da02276a…",
+  "region": "sword",
+  "before_sha": "248bf1236976f56e5a647bac379a916cb24432d20b03a68a9ab1a251b73ab621",
+  "after_sha": "f4d06a4d715a05bf34a31dd48483bbafb9c1710da4c6d904ddf5cdb4adc91d08",
+  "mask_area_px": 288,
+  "changed_px": 288,
+  "changed_pct": 3.1,
+  "untouched_sha": "29a588568bf9b04993f7492a8caba1a819fa70c1cfc1312bcc1e180981e3e932",
   "checks": [
     { "name": "pivot", "status": "ok" },
     { "name": "scale", "status": "ok" },
@@ -155,7 +178,7 @@ bin/second-edit check --asset /tmp/second-edit-demo/hero.v2.asset.json
     { "name": "atlas", "status": "ok" }
   ],
   "verdict": "PASS",
-  "output": "hero.v2.png"
+  "output": "hero.v3.png"
 }
 ```
 
@@ -163,13 +186,13 @@ bin/second-edit check --asset /tmp/second-edit-demo/hero.v2.asset.json
 
 ## 导入校验的四个错误码
 
-校验读的是 `.tscn` 里的节点属性，和 Godot 导入时读的是同一批字段。每个错误码都对应一个可以指认的差异，而不是"感觉不对"。
+校验读的是 `.tscn` 里节点声明的属性。它不是 Godot 导入器的复刻：`pixels_per_unit` 来自项目自定义的 `metadata/pixels_per_unit` 键，导入器并不读它。每个错误码都对应一个可以指认的差异，而不是"感觉不对"。
 
 | 错误码 | 触发条件 | v0.1 的判定 |
 | --- | --- | --- |
 | `PIVOT_DRIFT` | 场景里算出的枢轴像素位置与契约不符 | `centered` + `offset` 推出纹理左上角，再取反 |
 | `SCALE_MISMATCH` | 场景的 `scale` 或 `metadata/pixels_per_unit` 与契约不符 | 记录并比较声明值，不做像素换算推测 |
-| `COLLISION_OUT_OF_BOUNDS` | 任一碰撞多边形顶点落到纹理尺寸之外 | 顶点变换到像素空间后逐点比较 |
+| `COLLISION_OUT_OF_BOUNDS` | 任一碰撞多边形顶点落到纹理尺寸之外 | 顶点变换到像素空间后逐点比较边界 |
 | `ATLAS_REGION_SHIFT` | `AtlasTexture` 的图集或 `region` 与契约不符 | 逐字段比较图集路径与矩形 |
 
 仓库里的四个 fixture 分别触发这四个错误码，测试会同时检查"未改动的资产必须全 PASS"和"每个 fixture 只报一个违规"。
@@ -202,7 +225,8 @@ bin/second-edit check --asset /tmp/second-edit-demo/hero.v2.asset.json
 
 - **只有 Godot 4 与 2D PNG。** 3D、GLB、Unity、Unreal、GameMaker 都不在 v0.1 内。用一个会猜的 Unity 校验器，比没有校验器更糟。
 - **不生成补丁。** 没有模型调用、没有 API key、没有网络。补丁来自图像模型、agent 的画布或你手画的一方块。
-- **碰撞多边形按"纹理像素空间、相对精灵原点"解释。** 这对本仓库的 fixture 和"碰撞体挂在精灵下"的常见布局是精确的，不是通用变换；有独立缩放或父级变换时请在 issue 里给出场景。
+- **`pixels_per_unit` 不是导入器读取的字段。** 它来自场景自定义的 `metadata/pixels_per_unit` 键；v0.1 只记录并比较你声明的值，不做像素换算推测。
+- **碰撞多边形按"纹理像素空间、相对精灵原点"解释。** 这对本仓库的 fixture 和"碰撞体挂在精灵下"的常见布局是精确的，不是通用变换；有独立缩放或父级变换时请在 issue 里给出场景。`collision` 检查只验证顶点不越出纹理边界，不逐点比对契约里记录的顶点。
 - **每个 receipts 目录只有一条血脉。** 换了输出目录或另起一条链都会得到 `BROKEN_CHAIN`，这是刻意的：链断了就不能再声称"这是第 N 次编辑"。
 - **v0.1 只校验整张图集的一致性**，不逐帧编辑精灵表动画。
 - **只发布 darwin 与 linux 二进制。** 没有 Windows 构建，也没有签名安装包。
@@ -257,7 +281,7 @@ go run ./testdata/hero/make_fixture.go -out /tmp/se   # 重新生成 fixture
 
 fixture 是确定性的：同一台机器上重复生成得到相同字节，因此 `testdata/hero/hero.asset.json` 可以作为 `init` 的 golden 文件。改 fixture 时先改 `make_fixture.go`，重新生成，再更新 golden。
 
-`assets/demo.tape` 是终端演示的录制脚本（`vhs assets/demo.tape`），它跑的就是上面的快速开始路径。
+`assets/demo.tape` 是终端演示的录制脚本（`vhs assets/demo.tape`），它跑的就是上面"30 秒看结果"的同一条路径。
 
 ## License
 

@@ -159,8 +159,14 @@ func cmdCheck(args []string) int {
 		fmt.Fprintf(os.Stderr, "REJECT %s: %s\n(exit %d)\n", bad.Code, bad.Detail, contract.ExitReject)
 		return contract.ExitReject
 	}
-	fmt.Printf("check PASS · %s\n", receipt.Summary(ins.Checks))
-	fmt.Printf("receipt chain ok (%d %s)\n", ins.Receipt, plural(ins.Receipt, "receipt", "receipts"))
+	// With --json the stdout stream is one JSON object and nothing else, so
+	// the human lines move to stderr exactly as they do for apply.
+	human := os.Stdout
+	if *jsonOut {
+		human = os.Stderr
+	}
+	fmt.Fprintf(human, "check PASS · %s\n", receipt.Summary(ins.Checks))
+	fmt.Fprintf(human, "receipt chain ok (%d %s)\n", ins.Receipt, plural(ins.Receipt, "receipt", "receipts"))
 	return contract.ExitPass
 }
 

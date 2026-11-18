@@ -1,7 +1,7 @@
 // Command make_fixture writes the hero sprite fixture: a 96x96 atlas sheet, a
-// Godot 4 scene that draws it, one good patch and one patch that reaches
-// outside the named region. Everything is deterministic; re-running it on the
-// same machine reproduces the same bytes.
+// Godot 4 scene that draws it, one good patch per named region (helmet and
+// sword) and one patch that reaches outside the helmet region. Everything is
+// deterministic; re-running it on the same machine reproduces the same bytes.
 //
 //	go run ./testdata/hero/make_fixture.go -out /tmp/se
 package main
@@ -47,6 +47,12 @@ func main() {
 	repaint(helmetPatch, 24, 24, helmet, func(lx, ly float64) bool { return ly >= -18 && ly < -8 }, color.NRGBA{R: 0xC0, G: 0x39, B: 0x2B, A: 0xFF})
 	writePNG(filepath.Join(*out, "helmet.png"), helmetPatch)
 
+	// A second accepted patch on a different region, so the demo can show a
+	// chained receipt (0002 with parent_receipt 0001).
+	swordPatch := crop(sheet, 42, 64, 12, 24)
+	repaint(swordPatch, 42, 64, sword, func(lx, ly float64) bool { return true }, color.NRGBA{R: 0xE8, G: 0xB4, B: 0x4A, A: 0xFF})
+	writePNG(filepath.Join(*out, "sword.png"), swordPatch)
+
 	sloppy := crop(sheet, 24, 24, 48, 40)
 	repaint(sloppy, 24, 24, helmet, func(lx, ly float64) bool { return ly >= -18 && ly < -8 }, color.NRGBA{R: 0xC0, G: 0x39, B: 0x2B, A: 0xFF})
 	// One pixel outside the octagon, inside its bounding box: the refusal case.
@@ -77,6 +83,7 @@ func main() {
 	fmt.Printf("wrote %s\n", *out)
 	fmt.Printf("hero.png %dx%d · helmet region %d px · good patch changes %d px (%.1f%% of the sheet)\n",
 		size, size, maskArea(mask), changed, float64(changed)*100/float64(size*size))
+	fmt.Println("sword.png repaints the sword region, for a second chained edit")
 	fmt.Println("sloppy.png differs from hero.png at exactly 1 pixel outside the helmet polygon")
 }
 

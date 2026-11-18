@@ -1,6 +1,8 @@
 // Package godot maps a Godot 4 scene onto asset facts and checks those facts
-// against a contract. It reads the same node properties the importer reads;
-// nothing here guesses at engine behaviour.
+// against a contract. It reads the node properties this build maps and records
+// declared values; it does not re-implement Godot's importer. In particular
+// pixels_per_unit comes from the project's own metadata/pixels_per_unit key,
+// which the importer does not read.
 //
 // v0.1 simplification: CollisionPolygon2D points are treated as authored in
 // texture-pixel space relative to the sprite origin. That is exact for the
